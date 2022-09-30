@@ -51,7 +51,7 @@ public class StringCalculator {
         assert sumTest10 == 0;
         ///
         String test12 = "-12,2,-3,4,-34";
-        int sumTest12 = stringCalculator.add(test12);
+        int sumTest12 = stringCalculator.add(test12); // exception must be thrown
     }
 
 

@@ -59,8 +59,8 @@ public class StringCalculator {
         if (numbers.matches("//(\\[?\\D+]?)\\n.+")) {
             String[] dividedString = numbers.split("\\n");
             String firstFormattingStep = dividedString[0].replaceFirst("//", "");
-            String[] arr = firstFormattingStep.replaceAll("\\[", "").split("]");
-            String retrievedDelimiterArr = Arrays.toString(arr).replaceAll(",", "");
+            String[] secondFormattingStep = firstFormattingStep.replaceAll("\\[", "").split("]");
+            String retrievedDelimiterArr = Arrays.toString(secondFormattingStep).replaceAll(",", "");
             String[] retrievedDigit = numbers.replaceAll("^//.+\\n", "")
                     .replaceAll("[" + retrievedDelimiterArr + "]", ",").split(",");
             return executeCalculating(retrievedDigit);

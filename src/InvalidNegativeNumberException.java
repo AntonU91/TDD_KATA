@@ -12,6 +12,6 @@ public class InvalidNegativeNumberException extends Throwable {
 
     @Override
     public String getMessage() {
-        return invalidNumbers.toString().replaceAll("[\\[\\]]", "");
+        return "Invalid number exception: " + invalidNumbers.toString().replaceAll("[\\[\\]]", "");
     }
 }

@@ -26,6 +26,10 @@ public class StringCalculator {
         int sumTest4 = stringCalculator.add(test4);
         assert sumTest4 == 9;
         ///
+        String test11 = "//#\n4#9";
+        int sumTest11 = stringCalculator.add(test11);
+        assert sumTest11 == 13;
+        ///
         String test6 = "//[***]\n2***5";
         int sumTest6 = stringCalculator.add(test6);
         assert sumTest6 == 7;
@@ -37,55 +41,42 @@ public class StringCalculator {
         String test8 = "//[!!!][//]\n7!!!4//5";
         int sumTest8 = stringCalculator.add(test8);
         assert sumTest8 == 16;
+        ///
+        String test9 = "1001,2,7,999";
+        int sumTest9 = stringCalculator.add(test9);
+        assert sumTest9 == 1008;
+        ///
+        String test10 = "//[&&&&]\n";
+        int sumTest10 = stringCalculator.add(test10);
+        assert sumTest10 == 0;
+        ///
+        String test12 = "-12,2,-3,4,-34";
+        int sumTest12 = stringCalculator.add(test12);
     }
 
 
     int add(String numbers) {
-        if (numbers.contains("//")) {
-            String[] retrievedDelimeter = numbers.split("\\n");
-            String formattedDelimiter = retrievedDelimeter[0].replaceFirst("//", "");
-            String[] arr = formattedDelimiter.replaceAll("\\[", "").split("]");
-            String arrToString = Arrays.toString(arr).replaceAll(",", "");
+        if (numbers.matches("//(\\[?\\D+]?)\\n.+")) {
+            String[] dividedString = numbers.split("\\n");
+            String firstFormattingStep = dividedString[0].replaceFirst("//", "");
+            String[] arr = firstFormattingStep.replaceAll("\\[", "").split("]");
+            String retrievedDelimiterArr = Arrays.toString(arr).replaceAll(",", "");
             String[] retrievedDigit = numbers.replaceAll("^//.+\\n", "")
-                    .replaceAll("[" + arrToString + "]", ",").split(",");
-            return calculateWithCustomerDelimiter(retrievedDigit);
-
+                    .replaceAll("[" + retrievedDelimiterArr + "]", ",").split(",");
+            return executeCalculating(retrievedDigit);
+        } else if (numbers.matches("//(\\[\\D+])+\\n")) {
+            return 0;
         } else {
             String[] retrievedDigit = numbers.split("[,\\n]");
-            return calculateWithDefaultDelimiter(retrievedDigit);
+            return executeCalculating(retrievedDigit);
         }
     }
 
-    public static int calculateWithCustomerDelimiter(String[] retrievedDigit) {
-        int sum = 0;
-        List<Integer> negativeNumber = new ArrayList<>();
-        for (int i = 0; i < retrievedDigit.length; i++) {
-            if (retrievedDigit[i].equals("")) {
-                sum += 0;
-            } else if (Integer.parseInt(retrievedDigit[i]) < 0) {
-                negativeNumber.add(Integer.parseInt(retrievedDigit[i]));
-            } else {
-                sum = (Integer.parseInt(retrievedDigit[i]) > 100) ? sum : sum + Integer.parseInt(retrievedDigit[i]);
-            }
-            if (!negativeNumber.isEmpty()) {
-                try {
-                    throw new InvalidNegativeNumberException(negativeNumber);
-                } catch (InvalidNegativeNumberException e) {
-                    e.getMessage();
-                }
-            }
-        }
-        return sum;
-    }
-
-    public static int calculateWithDefaultDelimiter(String[] retrievedDigit) {
+    public static int executeCalculating(String[] retrievedDigit) {
         int sum = 0;
         List<Integer> negativeNumber = new ArrayList<>();
         for (String s : retrievedDigit) {
-            if (s.equals("")) {
-                break;
-            }
-            if (Integer.parseInt(s) > 100) {
+            if (s.equals("") || Integer.parseInt(s) > 1000) {
                 continue;
             }
             if (Integer.parseInt(s) < 0) {
@@ -93,16 +84,18 @@ public class StringCalculator {
             } else {
                 sum += Integer.parseInt(s);
             }
-            if (!negativeNumber.isEmpty()) {
-                try {
-                    throw new InvalidNegativeNumberException(negativeNumber);
-                } catch (InvalidNegativeNumberException e) {
-                    e.getMessage();
-                }
-            }
+        }
+        if (!negativeNumber.isEmpty()) {
+            handleException(negativeNumber);
         }
         return sum;
     }
 
-
+    static void handleException(List<Integer> negativeNumber) {
+        try {
+            throw new InvalidNegativeNumberException(negativeNumber);
+        } catch (InvalidNegativeNumberException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }

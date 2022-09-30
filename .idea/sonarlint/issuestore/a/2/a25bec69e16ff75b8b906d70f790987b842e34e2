@@ -1,0 +1,15 @@
+
+0
+java:S1220""Move this file to a named package.
+Y
+java:S2166"CRename this class to remove "Exception" or correct its inheritance.(µ¼Üí
+B
+java:S1165"'Make this "invalidNumbers" field final.(½öý¶ýÿÿÿÿ
+5
+java:S1165" Make this "message" field final.(ó—Ø.
+F
+java:S1948"+Make "invalidNumbers" private or transient.(½öý¶ýÿÿÿÿ
+F
+java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ
+H
+java:S1128"-Remove this unused import 'java.util.Arrays'.(î–˜Éüÿÿÿÿ

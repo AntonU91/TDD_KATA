@@ -1,0 +1,13 @@
+
+7
+java:S1220""Move this file to a named package.8Æˆåò¸0
+_
+java:S1854>"=Remove this useless assignment to local variable "sumTest12".(€«­Æùÿÿÿÿ8åˆåò¸0
+]	java:S125!"<This block of commented-out lines of code should be removed.(ÃäšÓüÿÿÿÿ8Ï¾éò¸0
+P
+java:S1481>".Remove this unused "sumTest12" local variable.(€«­Æùÿÿÿÿ8‹‰åò¸0
+n
+java:S5998C"LRefactor this repetition that can lead to a stack overflow for large inputs.(ãÔé±şÿÿÿÿ8‹‰åò¸0
+j
+java:S5361X"HReplace this call to "replaceAll()" by a call to the "replace()" method.(Ò‚‡Ÿüÿÿÿÿ8‰åò¸0
+Z	java:S106s"9Replace this use of System.out or System.err by a logger.(©şêÜúÿÿÿÿ8‰åò¸0

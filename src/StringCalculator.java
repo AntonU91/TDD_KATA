@@ -10,6 +10,10 @@ public class StringCalculator {
         int sumTest1 = stringCalculator.add(test1);
         assert sumTest1 == 0;
         ///
+        String test13 ="67";
+        int sumTest13 =stringCalculator.add(test13);
+        assert  sumTest13 ==67;
+        ///
         String test2 = "2,4";
         int sumTest2 = stringCalculator.add(test2);
         assert sumTest2 == 6;
@@ -25,6 +29,10 @@ public class StringCalculator {
         String test4 = "2\n2,5";
         int sumTest4 = stringCalculator.add(test4);
         assert sumTest4 == 9;
+        ///
+//        String test14 ="45\n,";
+//        int sumTest14 = stringCalculator.add(test14);
+//        assert sumTest14 ==45;
         ///
         String test11 = "//#\n4#9";
         int sumTest11 = stringCalculator.add(test11);
@@ -56,17 +64,18 @@ public class StringCalculator {
 
 
     int add(String numbers) {
-        if (numbers.matches("//\\[?\\D+]?\\n.+")) {
+        if (numbers.matches("(\\d+[,\\n]?\\d*)+")) {
+            String[] retrievedDigit = numbers.split("[,\\n]");
+            return executeCalculating(retrievedDigit);
+        }else if (numbers.matches("//\\[?\\D+]?+\\n")) {
+            return 0;
+        }
+         else if (numbers.matches("//\\[?\\D+]?\\n.+")) {
             String[] dividedString = numbers.split("\\n");
             String retrievedDelimiterArr = getDelimiter(dividedString);
             String[] retrievedDigit = getDigitSequence(numbers, retrievedDelimiterArr);
             return executeCalculating(retrievedDigit);
-        } else if (numbers.matches("//(\\[\\D+])+\\n")) {
-            return 0;
-        } else {
-            String[] retrievedDigit = numbers.split("[,\\n]");
-            return executeCalculating(retrievedDigit);
-        }
+        } else return 0;
     }
 
     private String[] getDigitSequence(String numbers, String retrievedDelimiterArr) {

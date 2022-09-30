@@ -50,19 +50,16 @@ public class StringCalculator {
         int sumTest10 = stringCalculator.add(test10);
         assert sumTest10 == 0;
         ///
-        String test12 = "-12,2,-3,4,-34";
+        String test12 = "-12,2,-3,4,-97";
         int sumTest12 = stringCalculator.add(test12); // exception must be thrown
     }
 
 
     int add(String numbers) {
-        if (numbers.matches("//(\\[?\\D+]?)\\n.+")) {
+        if (numbers.matches("//\\[?\\D+]?\\n.+")) {
             String[] dividedString = numbers.split("\\n");
-            String firstFormattingStep = dividedString[0].replaceFirst("//", "");
-            String[] secondFormattingStep = firstFormattingStep.replaceAll("\\[", "").split("]");
-            String retrievedDelimiterArr = Arrays.toString(secondFormattingStep).replaceAll(",", "");
-            String[] retrievedDigit = numbers.replaceAll("^//.+\\n", "")
-                    .replaceAll("[" + retrievedDelimiterArr + "]", ",").split(",");
+            String retrievedDelimiterArr = getDelimiter(dividedString);
+            String[] retrievedDigit = getDigitSequence(numbers, retrievedDelimiterArr);
             return executeCalculating(retrievedDigit);
         } else if (numbers.matches("//(\\[\\D+])+\\n")) {
             return 0;
@@ -70,6 +67,17 @@ public class StringCalculator {
             String[] retrievedDigit = numbers.split("[,\\n]");
             return executeCalculating(retrievedDigit);
         }
+    }
+
+    private String[] getDigitSequence(String numbers, String retrievedDelimiterArr) {
+        return numbers.replaceAll("^//.+\\n", "")
+                .replaceAll("[" + retrievedDelimiterArr + "]", ",").split(",");
+    }
+
+    private String getDelimiter(String[] dividedString) {
+        String firstFormattingStep = dividedString[0].replaceFirst("//", "");
+        String[] secondFormattingStep = firstFormattingStep.replaceAll("\\[", "").split("]");
+        return Arrays.toString(secondFormattingStep);
     }
 
     public static int executeCalculating(String[] retrievedDigit) {

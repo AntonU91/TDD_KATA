@@ -4,8 +4,9 @@ import java.util.List;
 
 public class StringCalculator {
     public static void main(String[] args) {
+
         StringCalculator stringCalculator = new StringCalculator();
-        ///
+        /// TESTS
         String test1 = "";
         int sumTest1 = stringCalculator.add(test1);
         assert sumTest1 == 0;
@@ -62,6 +63,7 @@ public class StringCalculator {
         int sumTest12 = stringCalculator.add(test12); // exception must be thrown
     }
 
+    //     2,4,8 => 14;
 
     int add(String numbers) {
         if (numbers.matches("(\\d+[,\\n]?\\d*)+")) {
@@ -91,7 +93,7 @@ public class StringCalculator {
 
     public static int executeCalculating(String[] retrievedDigit) {
         int sum = 0;
-        List<Integer> negativeNumber = new ArrayList<>();
+        ArrayList<Integer> negativeNumber = new ArrayList<>();
         for (String s : retrievedDigit) {
             if (s.equals("") || Integer.parseInt(s) > 1000) {
                 continue;
@@ -108,7 +110,7 @@ public class StringCalculator {
         return sum;
     }
 
-    static void handleException(List<Integer> negativeNumber) {
+    static void handleException(ArrayList<Integer> negativeNumber) {
         try {
             throw new InvalidNegativeNumberException(negativeNumber);
         } catch (InvalidNegativeNumberException e) {

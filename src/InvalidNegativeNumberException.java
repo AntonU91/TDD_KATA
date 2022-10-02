@@ -3,10 +3,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class InvalidNegativeNumberException extends Throwable {
-    List<Integer> invalidNumbers;
+    ArrayList<Integer> invalidNumbers;
     String message;
 
-    public InvalidNegativeNumberException(List<Integer> invalidNumbers) {
+    public InvalidNegativeNumberException(ArrayList<Integer> invalidNumbers) {
         this.invalidNumbers = invalidNumbers;
     }
 

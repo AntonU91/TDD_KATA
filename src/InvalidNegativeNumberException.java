@@ -10,8 +10,9 @@ public class InvalidNegativeNumberException extends Throwable {
         this.invalidNumbers = invalidNumbers;
     }
 
-    @Override
+
     public String getMessage() {
         return "Invalid number exception: " + invalidNumbers.toString().replaceAll("[\\[\\]]", "");
     }
+
 }

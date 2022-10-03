@@ -1,19 +1,31 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class StringCalculator {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws WrongInputException {
 
         StringCalculator stringCalculator = new StringCalculator();
+//        Scanner scanner = new Scanner(System.in);
+//        try {
+//            String inputStr = scanner.nextLine();
+//            System.out.println(stringCalculator.add(inputStr));
+//        } catch (WrongInputException e) {
+//            e.printMessage();
+//        } finally {
+//            scanner.close();
+//        }
+
+
         /// TESTS
         String test1 = "";
         int sumTest1 = stringCalculator.add(test1);
         assert sumTest1 == 0;
         ///
-        String test13 ="67";
-        int sumTest13 =stringCalculator.add(test13);
-        assert  sumTest13 ==67;
+        String test13 = "67";
+        int sumTest13 = stringCalculator.add(test13);
+        assert sumTest13 == 67;
         ///
         String test2 = "2,4";
         int sumTest2 = stringCalculator.add(test2);
@@ -31,10 +43,10 @@ public class StringCalculator {
         int sumTest4 = stringCalculator.add(test4);
         assert sumTest4 == 9;
         ///
-//        String test14 ="45\n,";
+//        String test14 = "45\n,";
 //        int sumTest14 = stringCalculator.add(test14);
-//        assert sumTest14 ==45;
-        ///
+//        assert sumTest14 == new WrongInputException();
+
         String test11 = "//#\n4#9";
         int sumTest11 = stringCalculator.add(test11);
         assert sumTest11 == 13;
@@ -47,7 +59,7 @@ public class StringCalculator {
         int sumTes7 = stringCalculator.add(test7);
         assert sumTes7 == 14;
         ///
-        String test8 = "//[!!!][//]\n7!!!4//5";
+        String test8 = "//[!!!][//]\n7!!4//5";
         int sumTest8 = stringCalculator.add(test8);
         assert sumTest8 == 16;
         ///
@@ -61,23 +73,26 @@ public class StringCalculator {
         ///
         String test12 = "-12,2,-3,4,-97";
         int sumTest12 = stringCalculator.add(test12); // exception must be thrown
+        ///
+        String test15 = "//;\n-2;56;-67";
+        int sumTest15 = stringCalculator.add(test15);
+
     }
 
-    //     2,4,8 => 14;
-
-    int add(String numbers) {
-        if (numbers.matches("(\\d+[,\\n]?\\d*)+")) {
-            String[] retrievedDigit = numbers.split("[,\\n]");
-            return executeCalculating(retrievedDigit);
-        }else if (numbers.matches("//\\[?\\D+]?+\\n")) {
+    int add(String numbers) throws WrongInputException {
+        if (numbers.equals("")) {
             return 0;
-        }
-         else if (numbers.matches("//\\[?\\D+]?\\n.+")) {
+        } else if (numbers.matches("(-?\\d+[,\\n]?-?\\d*)+")) { //2,   2,34,34,    2\n23,34
+            String[] retrievedDigit = numbers.split("[,\\n]"); // 2,6,14 => {[2] [6] [14]}
+            return executeCalculating(retrievedDigit);
+        } else if (numbers.matches("//\\[?\\D+]?+\\n")) {
+            return 0;
+        } else if (numbers.matches("//\\[?\\D+]?\\n(-?\\d+\\D*)+")) {
             String[] dividedString = numbers.split("\\n");
             String retrievedDelimiterArr = getDelimiter(dividedString);
             String[] retrievedDigit = getDigitSequence(numbers, retrievedDelimiterArr);
             return executeCalculating(retrievedDigit);
-        } else return 0;
+        } else throw new WrongInputException();
     }
 
     private String[] getDigitSequence(String numbers, String retrievedDelimiterArr) {

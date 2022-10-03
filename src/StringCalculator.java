@@ -2,20 +2,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class StringCalculator {
     public static void main(String[] args) throws WrongInputException {
 
         StringCalculator stringCalculator = new StringCalculator();
-//        Scanner scanner = new Scanner(System.in);
-//        try {
-//            String inputStr = scanner.nextLine();
-//            System.out.println(stringCalculator.add(inputStr));
-//        } catch (WrongInputException e) {
-//            e.printMessage();
-//        } finally {
-//            scanner.close();
-//        }
+        Scanner scanner = new Scanner(System.in);
+        try {
+            String inputStr = scanner.nextLine();
+            System.out.println(stringCalculator.add(inputStr));
+        } catch (WrongInputException e) {
+            e.printMessage();
+        } finally {
+            scanner.close();
+        }
 
 
         /// TESTS
@@ -59,7 +60,7 @@ public class StringCalculator {
         int sumTes7 = stringCalculator.add(test7);
         assert sumTes7 == 14;
         ///
-        String test8 = "//[!!!][//]\n7!!4//5";
+        String test8 = "//[!!!][//]\n7!!!4//5";
         int sumTest8 = stringCalculator.add(test8);
         assert sumTest8 == 16;
         ///
@@ -71,39 +72,46 @@ public class StringCalculator {
         int sumTest10 = stringCalculator.add(test10);
         assert sumTest10 == 0;
         ///
-        String test12 = "-12,2,-3,4,-97";
-        int sumTest12 = stringCalculator.add(test12); // exception must be thrown
-        ///
-        String test15 = "//;\n-2;56;-67";
-        int sumTest15 = stringCalculator.add(test15);
+//        String test12 = "-12,2,-3,4,-97";
+//        int sumTest12 = stringCalculator.add(test12); // exception must be thrown
+//        ///
+//        String test15 = "//;\n-2;56;-67";
+//        int sumTest15 = stringCalculator.add(test15);
 
     }
 
-    int add(String numbers) throws WrongInputException {
-        if (numbers.equals("")) {
+    int add(String inputStr) throws WrongInputException {
+        if (inputStr.equals("")) {
             return 0;
-        } else if (numbers.matches("(-?\\d+[,\\n]?-?\\d*)+")) { //2,   2,34,34,    2\n23,34
-            String[] retrievedDigit = numbers.split("[,\\n]"); // 2,6,14 => {[2] [6] [14]}
+        } else if (inputStr.matches("(-?\\d+[,\\n]?-?\\d*)+")) {
+            String[] retrievedDigit = inputStr.split("[,\\n]");
             return executeCalculating(retrievedDigit);
-        } else if (numbers.matches("//\\[?\\D+]?+\\n")) {
+        } else if (inputStr.matches("//\\[?\\D+]?+\\n")) {
             return 0;
-        } else if (numbers.matches("//\\[?\\D+]?\\n(-?\\d+\\D*)+")) {
-            String[] dividedString = numbers.split("\\n");
-            String retrievedDelimiterArr = getDelimiter(dividedString);
-            String[] retrievedDigit = getDigitSequence(numbers, retrievedDelimiterArr);
+        } else if (inputStr.matches("//\\[?\\D+]?\\n(-?\\d+\\D*)+")) {
+            String[] dividedString = inputStr.split("\\n");
+            String[] retrievedDelimiterArr = getDelimiter(dividedString);
+            String[] retrievedDigit = getDigitSequence(inputStr, retrievedDelimiterArr);
             return executeCalculating(retrievedDigit);
         } else throw new WrongInputException();
     }
 
-    private String[] getDigitSequence(String numbers, String retrievedDelimiterArr) {
-        return numbers.replaceAll("^//.+\\n", "")
-                .replaceAll("[" + retrievedDelimiterArr + "]", ",").split(",");
+    private String[] getDigitSequence(String inputStr, String[] retrievedDelimiterArr) {
+        inputStr = inputStr.replaceAll("^//.+\\n", "");
+        for (String delimiter : retrievedDelimiterArr) {
+            if (delimiter.matches("[+?*$^\\[ \\](){}]+")) {
+                inputStr = (inputStr.replaceAll(Pattern.quote(delimiter), ","));
+            } else {
+                inputStr = (inputStr.replaceAll((delimiter), ","));
+            }
+        }
+        return inputStr.toString().split(",");
     }
 
-    private String getDelimiter(String[] dividedString) {
+    private String[] getDelimiter(String[] dividedString) {
         String firstFormattingStep = dividedString[0].replaceFirst("//", "");
-        String[] secondFormattingStep = firstFormattingStep.replaceAll("\\[", "").split("]");
-        return Arrays.toString(secondFormattingStep);
+        return firstFormattingStep.replaceAll("\\[", "").split("]");
+
     }
 
     public static int executeCalculating(String[] retrievedDigit) {

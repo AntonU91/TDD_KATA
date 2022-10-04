@@ -14,7 +14,6 @@ public class StringCalculator {
             System.out.println(stringCalculator.add(inputStr));
         } catch (WrongInputException e) {
             System.out.println(e.getMessage());
-            ;
         } catch (InvalidNegativeNumberException e) {
             System.out.println(e.getMessage());
         } finally {
@@ -45,10 +44,6 @@ public class StringCalculator {
         int sumTest4 = stringCalculator.add(test4);
         assert sumTest4 == 9;
         ///
-//        String test14 = "45\n,";
-//        int sumTest14 = stringCalculator.add(test14);
-//        assert sumTest14 == new WrongInputException();
-
         String test11 = "//#\n4#9";
         int sumTest11 = stringCalculator.add(test11);
         assert sumTest11 == 13;
@@ -72,51 +67,47 @@ public class StringCalculator {
         String test10 = "//[&&&&]\n";
         int sumTest10 = stringCalculator.add(test10);
         assert sumTest10 == 0;
-
-//        String test12 = "-12,2,-3,4,-97";
-//        int sumTest12 = stringCalculator.add(test12); // exception must be thrown
-//        ///
-//        String test15 = "//;\n-2;56;-67";
-//        int sumTest15 = stringCalculator.add(test15);
-
+        ///
+        String test17 = "//[!!][##]\n25,56!!89\n33\n";
+        System.out.println(stringCalculator.add(test17));
     }
 
     int add(String inputStr) throws WrongInputException, InvalidNegativeNumberException {
         if (inputStr.equals("")) {
-            return 0;                     // -12\n677    2\n8,7,34 => {[2] [8] [7]..}
-        } else if (inputStr.matches("(-?\\d+[,\\n]?-?\\d*)+")) { // 2,4    || 2\n3,65 || //[$$$][@@]\n43$$$4 || "" ||  //[!!!]\n
+            return 0;
+        } else if (inputStr.matches("(-?\\d+[,\\n]?-?\\d*)+")) {
             String[] retrievedDigit = inputStr.split("[,\\n]");
             return executeCalculating(retrievedDigit);
         } else if (inputStr.matches("//\\[?\\D+]?+\\n")) { //
             return 0;
-        } else if (inputStr.matches("//\\[?\\D+]?\\n(-?\\d+\\D*)+")) { //  "//[!!!][//]\n7!!!4//5
+        } else if (inputStr.matches("//\\[?\\D+]?\\n(-?\\d+([,\\n]?|\\D*))+")) {
             String[] dividedString = inputStr.split("\\n");
             String[] retrievedDelimiterArr = getDelimiter(dividedString);
-            String[] retrievedDigit = getDigitSequence(inputStr, retrievedDelimiterArr);
+            String[] retrievedDigit = getDigitSequence(dividedString, retrievedDelimiterArr);
             return executeCalculating(retrievedDigit);
         } else throw new WrongInputException();
     }
 
-    private String[] getDigitSequence(String inputStr, String[] retrievedDelimiterArr) {
-        inputStr = inputStr.replaceAll("^//.+\\n", "");
-        for (String delimiter : retrievedDelimiterArr) { //  [[!!] [!!!]] \\*
-            if (delimiter.matches("[+?*$^\\[ \\](){}]+")) { // *?!^$     //[**][#####\n2**56
-                inputStr = (inputStr.replaceAll(Pattern.quote(delimiter), ","));
+    private String[] getDigitSequence(String [] dividedStr, String[] retrievedDelimiterArr) {
+        String formattedStr = dividedStr[1].replaceAll("\\n",",");
+        for (String delimiter : retrievedDelimiterArr) {
+            if (delimiter.matches("[+?*$^\\[ \\](){}]+")) {
+                formattedStr = (formattedStr.replaceAll(Pattern.quote(delimiter), ","));
             } else {
-                inputStr = (inputStr.replaceAll((delimiter), ","));
+                formattedStr= (formattedStr.replaceAll((delimiter), ","));
             }
-        } //[**][#####\n2**56 =>2,56
-        return inputStr.split(","); //[[2] [56]]
+        }
+        return formattedStr.split(",");
     }
 
     private String[] getDelimiter(String[] dividedString) {
         String firstFormattingStep = dividedString[0].replaceFirst("//", "");
-        return firstFormattingStep.replaceAll("\\[", "").split("]"); //###]!!!!]
+        return firstFormattingStep.replaceAll("\\[", "").split("]");
     }
 
     public static int executeCalculating(String[] retrievedDigit) throws InvalidNegativeNumberException {
         int sum = 0;
-        ArrayList<Integer> negativeNumber = new ArrayList<>(); //1001, 3,4
+        ArrayList<Integer> negativeNumber = new ArrayList<>();
         for (String s : retrievedDigit) { //1001
             if (s.equals("") || Integer.parseInt(s) > 1000) {
                 continue;
